@@ -2,7 +2,7 @@ package clients
 
 import (
 	"context"
-	proto "exchange-integration-service-client/protobuf"
+	proto "github.com/syrym94/exchange-integration-service-client/protobuf"
 	"google.golang.org/grpc"
 )
 

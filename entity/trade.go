@@ -1,6 +1,8 @@
 package entity
 
-import "exchange-integration-service-client/protobuf"
+import (
+	"github.com/syrym94/exchange-integration-service-client/protobuf"
+)
 
 type Trade struct {
 	Symbol   string

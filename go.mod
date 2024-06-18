@@ -1,4 +1,4 @@
-module exchange-integration-service-client
+module github.com/syrym94/exchange-integration-service-client
 
 go 1.22
 
