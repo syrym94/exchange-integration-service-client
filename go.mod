@@ -1,6 +1,6 @@
 module github.com/syrym94/exchange-integration-service-client
 
-go 1.22
+go 1.22.4
 
 require (
 	google.golang.org/grpc v1.64.0

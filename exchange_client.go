@@ -1,8 +1,8 @@
-package clients
+package exchange_integration_service_client
 
 import (
 	"context"
-	proto "github.com/syrym94/exchange-integration-service-client/protobuf"
+	"github.com/syrym94/exchange-integration-service-client/proto"
 	"google.golang.org/grpc"
 )
 

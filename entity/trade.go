@@ -1,7 +1,7 @@
 package entity
 
 import (
-	"github.com/syrym94/exchange-integration-service-client/protobuf"
+	"github.com/syrym94/exchange-integration-service-client/proto"
 )
 
 type Trade struct {
@@ -12,14 +12,14 @@ type Trade struct {
 	Time     int64
 }
 
-func (Trade) TradeReqToProto() *protobuf.GetTradesRequest {
-	return &protobuf.GetTradesRequest{
+func (Trade) TradeReqToProto() *proto.GetTradesRequest {
+	return &proto.GetTradesRequest{
 		Exchange: "",
 	}
 }
 
-func (Trade) TradeToProto(t *Trade) *protobuf.Trade {
-	return &protobuf.Trade{
+func (Trade) TradeToProto(t *Trade) *proto.Trade {
+	return &proto.Trade{
 		Id:       t.ID,
 		Price:    t.Price,
 		Quantity: t.Quantity,
@@ -28,7 +28,7 @@ func (Trade) TradeToProto(t *Trade) *protobuf.Trade {
 	}
 }
 
-func (Trade) TradeFromProto(t *protobuf.Trade) *Trade {
+func (Trade) TradeFromProto(t *proto.Trade) *Trade {
 	return &Trade{
 		Symbol:   t.Symbol,
 		Price:    t.Price,
