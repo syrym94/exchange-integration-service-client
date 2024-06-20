@@ -26,3 +26,12 @@ func (ec *ExchangeClient) GetTrades(exchange string) ([]*proto.Trade, error) {
 	}
 	return res.Trades, nil
 }
+
+func (ec *ExchangeClient) GetWalletBalance(accountType string) (*proto.WalletBalanceResponse, error) {
+	req := &proto.GetWalletBalanceRequest{AccountType: accountType}
+	res, err := ec.client.GetWalletBalance(context.Background(), req)
+	if err != nil {
+		return nil, err
+	}
+	return res.Balance, nil
+}

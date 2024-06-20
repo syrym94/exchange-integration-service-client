@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v4.24.3
-// source: protobuf/exchange.proto
+// source: proto/exchange.proto
 
 package proto
 
@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ExchangeServiceClient interface {
 	GetTrades(ctx context.Context, in *GetTradesRequest, opts ...grpc.CallOption) (*GetTradesResponse, error)
+	GetWalletBalance(ctx context.Context, in *GetWalletBalanceRequest, opts ...grpc.CallOption) (*GetWalletBalanceResponse, error)
 }
 
 type exchangeServiceClient struct {
@@ -42,11 +43,21 @@ func (c *exchangeServiceClient) GetTrades(ctx context.Context, in *GetTradesRequ
 	return out, nil
 }
 
+func (c *exchangeServiceClient) GetWalletBalance(ctx context.Context, in *GetWalletBalanceRequest, opts ...grpc.CallOption) (*GetWalletBalanceResponse, error) {
+	out := new(GetWalletBalanceResponse)
+	err := c.cc.Invoke(ctx, "/exchange.ExchangeService/GetWalletBalance", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ExchangeServiceServer is the server API for ExchangeService service.
 // All implementations must embed UnimplementedExchangeServiceServer
 // for forward compatibility
 type ExchangeServiceServer interface {
 	GetTrades(context.Context, *GetTradesRequest) (*GetTradesResponse, error)
+	GetWalletBalance(context.Context, *GetWalletBalanceRequest) (*GetWalletBalanceResponse, error)
 	mustEmbedUnimplementedExchangeServiceServer()
 }
 
@@ -56,6 +67,9 @@ type UnimplementedExchangeServiceServer struct {
 
 func (UnimplementedExchangeServiceServer) GetTrades(context.Context, *GetTradesRequest) (*GetTradesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTrades not implemented")
+}
+func (UnimplementedExchangeServiceServer) GetWalletBalance(context.Context, *GetWalletBalanceRequest) (*GetWalletBalanceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetWalletBalance not implemented")
 }
 func (UnimplementedExchangeServiceServer) mustEmbedUnimplementedExchangeServiceServer() {}
 
@@ -88,6 +102,24 @@ func _ExchangeService_GetTrades_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ExchangeService_GetWalletBalance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetWalletBalanceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ExchangeServiceServer).GetWalletBalance(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/exchange.ExchangeService/GetWalletBalance",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ExchangeServiceServer).GetWalletBalance(ctx, req.(*GetWalletBalanceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ExchangeService_ServiceDesc is the grpc.ServiceDesc for ExchangeService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -99,7 +131,11 @@ var ExchangeService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "GetTrades",
 			Handler:    _ExchangeService_GetTrades_Handler,
 		},
+		{
+			MethodName: "GetWalletBalance",
+			Handler:    _ExchangeService_GetWalletBalance_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "protobuf/exchange.proto",
+	Metadata: "proto/exchange.proto",
 }

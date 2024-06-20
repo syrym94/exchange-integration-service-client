@@ -4,4 +4,5 @@ import "github.com/syrym94/exchange-integration-service-client/proto"
 
 type ExchangeClient interface {
 	GetTrades(exchange string) ([]*proto.Trade, error)
+	GetWalletBalance(accountType string) (*proto.WalletBalanceResponse, error)
 }

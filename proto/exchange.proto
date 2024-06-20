@@ -2,10 +2,11 @@ syntax = "proto3";
 
 package exchange;
 
-option go_package = "/protobuf";
+option go_package = "/proto";
 
 service ExchangeService {
   rpc GetTrades(GetTradesRequest) returns (GetTradesResponse);
+  rpc GetWalletBalance(GetWalletBalanceRequest) returns (GetWalletBalanceResponse);
 }
 
 message GetTradesRequest {
@@ -22,4 +23,55 @@ message Trade {
 
 message GetTradesResponse {
   repeated Trade trades = 1;
+}
+
+message GetWalletBalanceRequest {
+  string accountType = 1;
+}
+
+message WalletBalanceCoin {
+  string availableToBorrow = 1;
+  string bonus = 2;
+  string accruedInterest = 3;
+  string availableToWithdraw = 4;
+  string totalOrderIM = 5;
+  string equity = 6;
+  string totalPositionMM = 7;
+  string usdValue = 8;
+  string unrealisedPnl = 9;
+  bool collateralSwitch = 10;
+  string spotHedgingQty = 11;
+  string borrowAmount = 12;
+  string totalPositionIM = 13;
+  string walletBalance = 14;
+  string cumRealisedPnl = 15;
+  string locked = 16;
+  bool marginCollateral = 17;
+  string coin = 18;
+}
+
+message WalletBalanceList {
+  string totalEquity = 1;
+  string accountIMRate = 2;
+  string totalMarginBalance = 3;
+  string totalInitialMargin = 4;
+  string accountType = 5;
+  string totalAvailableBalance = 6;
+  string accountMMRate = 7;
+  string totalPerpUPL = 8;
+  string totalWalletBalance = 9;
+  string accountLTV = 10;
+  string totalMaintenanceMargin = 11;
+  repeated WalletBalanceCoin coin = 12;
+}
+
+message WalletBalanceResponse {
+  int32 retCode = 1;
+  string retMsg = 2;
+  repeated WalletBalanceList list = 3;
+  int64 time = 4;
+}
+
+message GetWalletBalanceResponse {
+  WalletBalanceResponse balance = 1;
 }
