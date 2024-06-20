@@ -1,4 +1,4 @@
-package exchange_integration_service_client
+package exchange_client
 
 import (
 	"context"
