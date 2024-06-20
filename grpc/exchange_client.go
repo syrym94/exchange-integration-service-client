@@ -1,4 +1,4 @@
-package exchange_client
+package grpc
 
 import (
 	"context"
@@ -10,13 +10,12 @@ type ExchangeClient struct {
 	client proto.ExchangeServiceClient
 }
 
-func NewExchangeClient(address string) (*ExchangeClient, error) {
-	conn, err := grpc.Dial(address, grpc.WithInsecure())
-	if err != nil {
-		return nil, err
-	}
-	client := proto.NewExchangeServiceClient(conn)
-	return &ExchangeClient{client: client}, nil
+func NewExchangeClient(conn *grpc.ClientConn) *ExchangeClient {
+	c := new(ExchangeClient)
+
+	c.client = proto.NewExchangeServiceClient(conn)
+
+	return c
 }
 
 func (ec *ExchangeClient) GetTrades(exchange string) ([]*proto.Trade, error) {
