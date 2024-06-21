@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type ExchangeServiceClient interface {
 	GetTrades(ctx context.Context, in *GetTradesRequest, opts ...grpc.CallOption) (*GetTradesResponse, error)
 	GetWalletBalance(ctx context.Context, in *GetWalletBalanceRequest, opts ...grpc.CallOption) (*GetWalletBalanceResponse, error)
+	StreamTickerData(ctx context.Context, in *TickerRequest, opts ...grpc.CallOption) (ExchangeService_StreamTickerDataClient, error)
 }
 
 type exchangeServiceClient struct {
@@ -52,12 +53,45 @@ func (c *exchangeServiceClient) GetWalletBalance(ctx context.Context, in *GetWal
 	return out, nil
 }
 
+func (c *exchangeServiceClient) StreamTickerData(ctx context.Context, in *TickerRequest, opts ...grpc.CallOption) (ExchangeService_StreamTickerDataClient, error) {
+	stream, err := c.cc.NewStream(ctx, &ExchangeService_ServiceDesc.Streams[0], "/exchange.ExchangeService/StreamTickerData", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &exchangeServiceStreamTickerDataClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type ExchangeService_StreamTickerDataClient interface {
+	Recv() (*TickerResponse, error)
+	grpc.ClientStream
+}
+
+type exchangeServiceStreamTickerDataClient struct {
+	grpc.ClientStream
+}
+
+func (x *exchangeServiceStreamTickerDataClient) Recv() (*TickerResponse, error) {
+	m := new(TickerResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // ExchangeServiceServer is the server API for ExchangeService service.
 // All implementations must embed UnimplementedExchangeServiceServer
 // for forward compatibility
 type ExchangeServiceServer interface {
 	GetTrades(context.Context, *GetTradesRequest) (*GetTradesResponse, error)
 	GetWalletBalance(context.Context, *GetWalletBalanceRequest) (*GetWalletBalanceResponse, error)
+	StreamTickerData(*TickerRequest, ExchangeService_StreamTickerDataServer) error
 	mustEmbedUnimplementedExchangeServiceServer()
 }
 
@@ -70,6 +104,9 @@ func (UnimplementedExchangeServiceServer) GetTrades(context.Context, *GetTradesR
 }
 func (UnimplementedExchangeServiceServer) GetWalletBalance(context.Context, *GetWalletBalanceRequest) (*GetWalletBalanceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetWalletBalance not implemented")
+}
+func (UnimplementedExchangeServiceServer) StreamTickerData(*TickerRequest, ExchangeService_StreamTickerDataServer) error {
+	return status.Errorf(codes.Unimplemented, "method StreamTickerData not implemented")
 }
 func (UnimplementedExchangeServiceServer) mustEmbedUnimplementedExchangeServiceServer() {}
 
@@ -120,6 +157,27 @@ func _ExchangeService_GetWalletBalance_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ExchangeService_StreamTickerData_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(TickerRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(ExchangeServiceServer).StreamTickerData(m, &exchangeServiceStreamTickerDataServer{stream})
+}
+
+type ExchangeService_StreamTickerDataServer interface {
+	Send(*TickerResponse) error
+	grpc.ServerStream
+}
+
+type exchangeServiceStreamTickerDataServer struct {
+	grpc.ServerStream
+}
+
+func (x *exchangeServiceStreamTickerDataServer) Send(m *TickerResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // ExchangeService_ServiceDesc is the grpc.ServiceDesc for ExchangeService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -136,6 +194,12 @@ var ExchangeService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ExchangeService_GetWalletBalance_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "StreamTickerData",
+			Handler:       _ExchangeService_StreamTickerData_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "proto/exchange.proto",
 }

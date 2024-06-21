@@ -7,6 +7,7 @@ option go_package = "/proto";
 service ExchangeService {
   rpc GetTrades(GetTradesRequest) returns (GetTradesResponse);
   rpc GetWalletBalance(GetWalletBalanceRequest) returns (GetWalletBalanceResponse);
+  rpc StreamTickerData(TickerRequest) returns (stream TickerResponse);
 }
 
 message GetTradesRequest {
@@ -75,4 +76,13 @@ message WalletBalanceResponse {
 
 message GetWalletBalanceResponse {
   WalletBalanceResponse balance = 1;
+}
+
+message TickerRequest {
+  string exchange = 1;
+  string tickerSymbol = 2;
+}
+
+message TickerResponse {
+  string data = 1;
 }

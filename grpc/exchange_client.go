@@ -35,3 +35,12 @@ func (ec *ExchangeClient) GetWalletBalance(exchange, accountType string) (*proto
 	}
 	return res.Balance, nil
 }
+
+func (ec *ExchangeClient) StreamTicker(exchange, tickerSymbol string) (*proto.TickerResponse, error) {
+	req := &proto.TickerRequest{Exchange: exchange, TickerSymbol: tickerSymbol}
+	res, err := ec.client.StreamTickerData(context.Background(), req)
+	if err != nil {
+		return nil, err
+	}
+	return res.Recv()
+}
