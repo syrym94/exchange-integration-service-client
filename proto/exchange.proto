@@ -26,7 +26,8 @@ message GetTradesResponse {
 }
 
 message GetWalletBalanceRequest {
-  string accountType = 1;
+  string exchange = 1;
+  string accountType = 2;
 }
 
 message WalletBalanceCoin {
