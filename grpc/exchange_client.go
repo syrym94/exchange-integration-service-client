@@ -44,3 +44,12 @@ func (ec *ExchangeClient) StreamTicker(exchange, tickerSymbol string) (*proto.Ti
 	}
 	return res.Recv()
 }
+
+func (ec *ExchangeClient) GetSubDepositAddress(exchange, coin, chainType, subMemberId string) (*proto.GetSubDepositAddressResponse, error) {
+	req := &proto.GetSubDepositAddressRequest{Exchange: exchange, Coin: coin, ChainType: chainType, SubMemberId: subMemberId}
+	res, err := ec.client.GetSubDepositAddress(context.Background(), req)
+	if err != nil {
+		return nil, err
+	}
+	return res, err
+}

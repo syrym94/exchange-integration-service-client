@@ -25,6 +25,7 @@ type ExchangeServiceClient interface {
 	GetTrades(ctx context.Context, in *GetTradesRequest, opts ...grpc.CallOption) (*GetTradesResponse, error)
 	GetWalletBalance(ctx context.Context, in *GetWalletBalanceRequest, opts ...grpc.CallOption) (*GetWalletBalanceResponse, error)
 	StreamTickerData(ctx context.Context, in *TickerRequest, opts ...grpc.CallOption) (ExchangeService_StreamTickerDataClient, error)
+	GetSubDepositAddress(ctx context.Context, in *GetSubDepositAddressRequest, opts ...grpc.CallOption) (*GetSubDepositAddressResponse, error)
 }
 
 type exchangeServiceClient struct {
@@ -85,6 +86,15 @@ func (x *exchangeServiceStreamTickerDataClient) Recv() (*TickerResponse, error) 
 	return m, nil
 }
 
+func (c *exchangeServiceClient) GetSubDepositAddress(ctx context.Context, in *GetSubDepositAddressRequest, opts ...grpc.CallOption) (*GetSubDepositAddressResponse, error) {
+	out := new(GetSubDepositAddressResponse)
+	err := c.cc.Invoke(ctx, "/exchange.ExchangeService/GetSubDepositAddress", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ExchangeServiceServer is the server API for ExchangeService service.
 // All implementations must embed UnimplementedExchangeServiceServer
 // for forward compatibility
@@ -92,6 +102,7 @@ type ExchangeServiceServer interface {
 	GetTrades(context.Context, *GetTradesRequest) (*GetTradesResponse, error)
 	GetWalletBalance(context.Context, *GetWalletBalanceRequest) (*GetWalletBalanceResponse, error)
 	StreamTickerData(*TickerRequest, ExchangeService_StreamTickerDataServer) error
+	GetSubDepositAddress(context.Context, *GetSubDepositAddressRequest) (*GetSubDepositAddressResponse, error)
 	mustEmbedUnimplementedExchangeServiceServer()
 }
 
@@ -107,6 +118,9 @@ func (UnimplementedExchangeServiceServer) GetWalletBalance(context.Context, *Get
 }
 func (UnimplementedExchangeServiceServer) StreamTickerData(*TickerRequest, ExchangeService_StreamTickerDataServer) error {
 	return status.Errorf(codes.Unimplemented, "method StreamTickerData not implemented")
+}
+func (UnimplementedExchangeServiceServer) GetSubDepositAddress(context.Context, *GetSubDepositAddressRequest) (*GetSubDepositAddressResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSubDepositAddress not implemented")
 }
 func (UnimplementedExchangeServiceServer) mustEmbedUnimplementedExchangeServiceServer() {}
 
@@ -178,6 +192,24 @@ func (x *exchangeServiceStreamTickerDataServer) Send(m *TickerResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _ExchangeService_GetSubDepositAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSubDepositAddressRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ExchangeServiceServer).GetSubDepositAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/exchange.ExchangeService/GetSubDepositAddress",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ExchangeServiceServer).GetSubDepositAddress(ctx, req.(*GetSubDepositAddressRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ExchangeService_ServiceDesc is the grpc.ServiceDesc for ExchangeService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -192,6 +224,10 @@ var ExchangeService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetWalletBalance",
 			Handler:    _ExchangeService_GetWalletBalance_Handler,
+		},
+		{
+			MethodName: "GetSubDepositAddress",
+			Handler:    _ExchangeService_GetSubDepositAddress_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
