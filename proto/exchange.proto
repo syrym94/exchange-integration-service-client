@@ -9,6 +9,7 @@ service ExchangeService {
   rpc GetWalletBalance(GetWalletBalanceRequest) returns (GetWalletBalanceResponse);
   rpc StreamTickerData(TickerRequest) returns (stream TickerResponse);
   rpc GetSubDepositAddress(GetSubDepositAddressRequest) returns (GetSubDepositAddressResponse);
+  rpc GetAccountCoinsBalance(AccountCoinsBalanceRequest) returns (AccountCoinsBalanceResponse);
 }
 
 message GetTradesRequest {
@@ -98,4 +99,23 @@ message GetSubDepositAddressRequest {
 message GetSubDepositAddressResponse {
   string address = 1;
   string tag = 2;
+}
+
+message AccountCoinsBalanceRequest {
+  string memberId = 1;
+  string accountType = 2;
+  string coin = 3;
+  int64 withBonus = 4;
+  string exchange = 5;
+}
+
+message AccountCoinsBalanceResponse {
+  repeated CoinBalance coinBalances = 1;
+}
+
+message CoinBalance {
+  string coin = 1;
+  string walletBalance = 2;
+  string transferBalance = 3;
+  string bonus = 4;
 }

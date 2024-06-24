@@ -53,3 +53,12 @@ func (ec *ExchangeClient) GetSubDepositAddress(exchange, coin, chainType, subMem
 	}
 	return res, err
 }
+
+func (ec *ExchangeClient) GetAccountCoinsBalance(exchange, memberId, accountType, coin string, withBonus int) (*proto.AccountCoinsBalanceResponse, error) {
+	req := &proto.AccountCoinsBalanceRequest{Exchange: exchange, Coin: coin, MemberId: memberId, AccountType: accountType, WithBonus: int64(withBonus)}
+	res, err := ec.client.GetAccountCoinsBalance(context.Background(), req)
+	if err != nil {
+		return nil, err
+	}
+	return res, err
+}
