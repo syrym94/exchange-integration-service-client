@@ -71,3 +71,12 @@ func (ec *ExchangeClient) GetWithdrawalRecords(exchange, coin, withdrawId, curso
 	}
 	return res, err
 }
+
+func (ec *ExchangeClient) GetWithdrawableAmount(exchange, coin string) (*proto.WithdrawableAmountResponse, error) {
+	req := &proto.WithdrawableAmountRequest{Exchange: exchange, Coin: coin}
+	res, err := ec.client.GetWithdrawableAmount(context.Background(), req)
+	if err != nil {
+		return nil, err
+	}
+	return res, err
+}

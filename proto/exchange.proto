@@ -11,6 +11,7 @@ service ExchangeService {
   rpc GetSubDepositAddress(GetSubDepositAddressRequest) returns (GetSubDepositAddressResponse);
   rpc GetAccountCoinsBalance(AccountCoinsBalanceRequest) returns (AccountCoinsBalanceResponse);
   rpc GetWithdrawalRecords(WithdrawalRecordsRequest) returns (WithdrawalRecordsResponse);
+  rpc GetWithdrawableAmount(WithdrawableAmountRequest) returns (WithdrawableAmountResponse);
 }
 
 message GetTradesRequest {
@@ -156,4 +157,20 @@ message CommonResponse {
   int32 retCode = 1;
   string retMsg = 2;
   string time = 3;
+}
+
+message WithdrawableAmountRequest {
+  string exchange = 1;
+  string coin = 2;
+}
+
+message WithdrawableAmount {
+  string coin = 1;
+  string withdrawableAmount = 2;
+  string availableBalance = 3;
+}
+
+message WithdrawableAmountResponse {
+  string limitAmountUsd = 1;
+  map<string, WithdrawableAmount> withdrawableAmounts = 2;
 }
