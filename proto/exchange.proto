@@ -12,6 +12,7 @@ service ExchangeService {
   rpc GetAccountCoinsBalance(AccountCoinsBalanceRequest) returns (AccountCoinsBalanceResponse);
   rpc GetWithdrawalRecords(WithdrawalRecordsRequest) returns (WithdrawalRecordsResponse);
   rpc GetWithdrawableAmount(WithdrawableAmountRequest) returns (WithdrawableAmountResponse);
+  rpc CreateWithdrawal(CreateWithdrawalRequest) returns (CreateWithdrawalResponse);
 }
 
 message GetTradesRequest {
@@ -173,4 +174,20 @@ message WithdrawableAmount {
 message WithdrawableAmountResponse {
   string limitAmountUsd = 1;
   map<string, WithdrawableAmount> withdrawableAmounts = 2;
+}
+
+message CreateWithdrawalRequest {
+  string coin = 1;
+  string chain = 2;
+  string address = 3;
+  string tag = 4;
+  string amount = 5;
+  int64 timestamp = 6;
+  int32 forceChain = 7;
+  string accountType = 8;
+  string exchange = 9;
+}
+
+message CreateWithdrawalResponse {
+  string id = 1;
 }

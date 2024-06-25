@@ -29,6 +29,7 @@ type ExchangeServiceClient interface {
 	GetAccountCoinsBalance(ctx context.Context, in *AccountCoinsBalanceRequest, opts ...grpc.CallOption) (*AccountCoinsBalanceResponse, error)
 	GetWithdrawalRecords(ctx context.Context, in *WithdrawalRecordsRequest, opts ...grpc.CallOption) (*WithdrawalRecordsResponse, error)
 	GetWithdrawableAmount(ctx context.Context, in *WithdrawableAmountRequest, opts ...grpc.CallOption) (*WithdrawableAmountResponse, error)
+	CreateWithdrawal(ctx context.Context, in *CreateWithdrawalRequest, opts ...grpc.CallOption) (*CreateWithdrawalResponse, error)
 }
 
 type exchangeServiceClient struct {
@@ -125,6 +126,15 @@ func (c *exchangeServiceClient) GetWithdrawableAmount(ctx context.Context, in *W
 	return out, nil
 }
 
+func (c *exchangeServiceClient) CreateWithdrawal(ctx context.Context, in *CreateWithdrawalRequest, opts ...grpc.CallOption) (*CreateWithdrawalResponse, error) {
+	out := new(CreateWithdrawalResponse)
+	err := c.cc.Invoke(ctx, "/exchange.ExchangeService/CreateWithdrawal", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ExchangeServiceServer is the server API for ExchangeService service.
 // All implementations must embed UnimplementedExchangeServiceServer
 // for forward compatibility
@@ -136,6 +146,7 @@ type ExchangeServiceServer interface {
 	GetAccountCoinsBalance(context.Context, *AccountCoinsBalanceRequest) (*AccountCoinsBalanceResponse, error)
 	GetWithdrawalRecords(context.Context, *WithdrawalRecordsRequest) (*WithdrawalRecordsResponse, error)
 	GetWithdrawableAmount(context.Context, *WithdrawableAmountRequest) (*WithdrawableAmountResponse, error)
+	CreateWithdrawal(context.Context, *CreateWithdrawalRequest) (*CreateWithdrawalResponse, error)
 	mustEmbedUnimplementedExchangeServiceServer()
 }
 
@@ -163,6 +174,9 @@ func (UnimplementedExchangeServiceServer) GetWithdrawalRecords(context.Context, 
 }
 func (UnimplementedExchangeServiceServer) GetWithdrawableAmount(context.Context, *WithdrawableAmountRequest) (*WithdrawableAmountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetWithdrawableAmount not implemented")
+}
+func (UnimplementedExchangeServiceServer) CreateWithdrawal(context.Context, *CreateWithdrawalRequest) (*CreateWithdrawalResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateWithdrawal not implemented")
 }
 func (UnimplementedExchangeServiceServer) mustEmbedUnimplementedExchangeServiceServer() {}
 
@@ -306,6 +320,24 @@ func _ExchangeService_GetWithdrawableAmount_Handler(srv interface{}, ctx context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ExchangeService_CreateWithdrawal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateWithdrawalRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ExchangeServiceServer).CreateWithdrawal(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/exchange.ExchangeService/CreateWithdrawal",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ExchangeServiceServer).CreateWithdrawal(ctx, req.(*CreateWithdrawalRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ExchangeService_ServiceDesc is the grpc.ServiceDesc for ExchangeService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -336,6 +368,10 @@ var ExchangeService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetWithdrawableAmount",
 			Handler:    _ExchangeService_GetWithdrawableAmount_Handler,
+		},
+		{
+			MethodName: "CreateWithdrawal",
+			Handler:    _ExchangeService_CreateWithdrawal_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

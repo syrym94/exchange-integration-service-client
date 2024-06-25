@@ -80,3 +80,12 @@ func (ec *ExchangeClient) GetWithdrawableAmount(exchange, coin string) (*proto.W
 	}
 	return res, err
 }
+
+func (ec *ExchangeClient) CreateWithdrawal(exchange, coin, chain, address, tag, accountType, amount string, timestamp int64, forceChain int32) (*proto.CreateWithdrawalResponse, error) {
+	req := &proto.CreateWithdrawalRequest{Exchange: exchange, Coin: coin, Chain: chain, Address: address, Tag: tag, Amount: amount, Timestamp: timestamp, ForceChain: forceChain, AccountType: accountType}
+	res, err := ec.client.CreateWithdrawal(context.Background(), req)
+	if err != nil {
+		return nil, err
+	}
+	return res, err
+}
