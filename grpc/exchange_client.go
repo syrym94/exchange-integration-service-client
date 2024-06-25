@@ -62,3 +62,12 @@ func (ec *ExchangeClient) GetAccountCoinsBalance(exchange, memberId, accountType
 	}
 	return res, err
 }
+
+func (ec *ExchangeClient) GetWithdrawalRecords(exchange, coin, withdrawId, cursor string, withdrawType, limit int32, startTime, endTime, withBonus int64) (*proto.WithdrawalRecordsResponse, error) {
+	req := &proto.WithdrawalRecordsRequest{Exchange: exchange, Coin: coin, WithdrawId: withdrawId, Cursor: cursor, WithdrawType: withdrawType, Limit: limit, StartTime: startTime, EndTime: endTime}
+	res, err := ec.client.GetWithdrawalRecords(context.Background(), req)
+	if err != nil {
+		return nil, err
+	}
+	return res, err
+}

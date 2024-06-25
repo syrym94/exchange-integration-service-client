@@ -10,6 +10,7 @@ service ExchangeService {
   rpc StreamTickerData(TickerRequest) returns (stream TickerResponse);
   rpc GetSubDepositAddress(GetSubDepositAddressRequest) returns (GetSubDepositAddressResponse);
   rpc GetAccountCoinsBalance(AccountCoinsBalanceRequest) returns (AccountCoinsBalanceResponse);
+  rpc GetWithdrawalRecords(WithdrawalRecordsRequest) returns (WithdrawalRecordsResponse);
 }
 
 message GetTradesRequest {
@@ -70,10 +71,8 @@ message WalletBalanceList {
 }
 
 message WalletBalanceResponse {
-  int32 retCode = 1;
-  string retMsg = 2;
-  repeated WalletBalanceList list = 3;
-  int64 time = 4;
+  CommonResponse commonResponse = 1;
+  repeated WalletBalanceList list = 2;
 }
 
 message GetWalletBalanceResponse {
@@ -118,4 +117,43 @@ message CoinBalance {
   string walletBalance = 2;
   string transferBalance = 3;
   string bonus = 4;
+}
+
+message WithdrawalRecordsRequest {
+  string exchange = 1;
+  string coin = 2;
+  string withdrawId = 3;
+  int32 withdrawType = 4;
+  int64 startTime = 5;
+  int64 endTime = 6;
+  int32 limit = 7;
+  string cursor = 8;
+}
+
+message WithdrawalRecord {
+  string coin = 1;
+  string chain = 2;
+  string amount = 3;
+  string txID = 4;
+  string status = 5;
+  string toAddress = 6;
+  string tag = 7;
+  string withdrawFee = 8;
+  string createTime = 9;
+  string updateTime = 10;
+  string withdrawId = 11;
+  int32 withdrawType = 12;
+}
+
+
+message WithdrawalRecordsResponse {
+  CommonResponse commonResponse = 1;
+  repeated WithdrawalRecord rows = 2;
+  string nextPageCursor = 3;
+}
+
+message CommonResponse {
+  int32 retCode = 1;
+  string retMsg = 2;
+  string time = 3;
 }
