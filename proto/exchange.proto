@@ -141,16 +141,11 @@ message WithdrawalRecord {
   string status = 5;
   string toAddress = 6;
   string tag = 7;
-  string depositFee = 8;
+  string withdrawFee = 8;
   string createTime = 9;
   string updateTime = 10;
   string withdrawId = 11;
   int32 withdrawType = 12;
-  string confirmations = 13;
-  string txIndex = 14;
-  string blockHash = 15;
-  string batchReleaseLimit = 16;
-  string depositType = 17;
 }
 
 
@@ -210,11 +205,11 @@ message SubMemberDepositRecord {
   string createTime = 9;
   string updateTime = 10;
   string depositId = 11;
-  string confirmations = 13;
-  string txIndex = 14;
-  string blockHash = 15;
-  string batchReleaseLimit = 16;
-  string depositType = 17;
+  string confirmations = 12;
+  string txIndex = 13;
+  string blockHash = 14;
+  string batchReleaseLimit = 15;
+  string depositType = 16;
 }
 
 message SubWithdrawalRecordsResponse {
