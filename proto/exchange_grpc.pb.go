@@ -30,7 +30,7 @@ type ExchangeServiceClient interface {
 	GetWithdrawalRecords(ctx context.Context, in *WithdrawalRecordsRequest, opts ...grpc.CallOption) (*WithdrawalRecordsResponse, error)
 	GetWithdrawableAmount(ctx context.Context, in *WithdrawableAmountRequest, opts ...grpc.CallOption) (*WithdrawableAmountResponse, error)
 	CreateWithdrawal(ctx context.Context, in *CreateWithdrawalRequest, opts ...grpc.CallOption) (*CreateWithdrawalResponse, error)
-	GetSubWithdrawalRecords(ctx context.Context, in *SubWithdrawalRecordsRequest, opts ...grpc.CallOption) (*SubWithdrawalRecordsResponse, error)
+	GetSubDepositRecords(ctx context.Context, in *SubDepositRecordsRequest, opts ...grpc.CallOption) (*SubDepositRecordsResponse, error)
 }
 
 type exchangeServiceClient struct {
@@ -136,9 +136,9 @@ func (c *exchangeServiceClient) CreateWithdrawal(ctx context.Context, in *Create
 	return out, nil
 }
 
-func (c *exchangeServiceClient) GetSubWithdrawalRecords(ctx context.Context, in *SubWithdrawalRecordsRequest, opts ...grpc.CallOption) (*SubWithdrawalRecordsResponse, error) {
-	out := new(SubWithdrawalRecordsResponse)
-	err := c.cc.Invoke(ctx, "/exchange.ExchangeService/GetSubWithdrawalRecords", in, out, opts...)
+func (c *exchangeServiceClient) GetSubDepositRecords(ctx context.Context, in *SubDepositRecordsRequest, opts ...grpc.CallOption) (*SubDepositRecordsResponse, error) {
+	out := new(SubDepositRecordsResponse)
+	err := c.cc.Invoke(ctx, "/exchange.ExchangeService/GetSubDepositRecords", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -157,7 +157,7 @@ type ExchangeServiceServer interface {
 	GetWithdrawalRecords(context.Context, *WithdrawalRecordsRequest) (*WithdrawalRecordsResponse, error)
 	GetWithdrawableAmount(context.Context, *WithdrawableAmountRequest) (*WithdrawableAmountResponse, error)
 	CreateWithdrawal(context.Context, *CreateWithdrawalRequest) (*CreateWithdrawalResponse, error)
-	GetSubWithdrawalRecords(context.Context, *SubWithdrawalRecordsRequest) (*SubWithdrawalRecordsResponse, error)
+	GetSubDepositRecords(context.Context, *SubDepositRecordsRequest) (*SubDepositRecordsResponse, error)
 	mustEmbedUnimplementedExchangeServiceServer()
 }
 
@@ -189,8 +189,8 @@ func (UnimplementedExchangeServiceServer) GetWithdrawableAmount(context.Context,
 func (UnimplementedExchangeServiceServer) CreateWithdrawal(context.Context, *CreateWithdrawalRequest) (*CreateWithdrawalResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateWithdrawal not implemented")
 }
-func (UnimplementedExchangeServiceServer) GetSubWithdrawalRecords(context.Context, *SubWithdrawalRecordsRequest) (*SubWithdrawalRecordsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetSubWithdrawalRecords not implemented")
+func (UnimplementedExchangeServiceServer) GetSubDepositRecords(context.Context, *SubDepositRecordsRequest) (*SubDepositRecordsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSubDepositRecords not implemented")
 }
 func (UnimplementedExchangeServiceServer) mustEmbedUnimplementedExchangeServiceServer() {}
 
@@ -352,20 +352,20 @@ func _ExchangeService_CreateWithdrawal_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ExchangeService_GetSubWithdrawalRecords_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SubWithdrawalRecordsRequest)
+func _ExchangeService_GetSubDepositRecords_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SubDepositRecordsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ExchangeServiceServer).GetSubWithdrawalRecords(ctx, in)
+		return srv.(ExchangeServiceServer).GetSubDepositRecords(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/exchange.ExchangeService/GetSubWithdrawalRecords",
+		FullMethod: "/exchange.ExchangeService/GetSubDepositRecords",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ExchangeServiceServer).GetSubWithdrawalRecords(ctx, req.(*SubWithdrawalRecordsRequest))
+		return srv.(ExchangeServiceServer).GetSubDepositRecords(ctx, req.(*SubDepositRecordsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -406,8 +406,8 @@ var ExchangeService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ExchangeService_CreateWithdrawal_Handler,
 		},
 		{
-			MethodName: "GetSubWithdrawalRecords",
-			Handler:    _ExchangeService_GetSubWithdrawalRecords_Handler,
+			MethodName: "GetSubDepositRecords",
+			Handler:    _ExchangeService_GetSubDepositRecords_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
