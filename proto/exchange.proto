@@ -141,7 +141,7 @@ message WithdrawalRecord {
   string status = 5;
   string toAddress = 6;
   string tag = 7;
-  string withdrawFee = 8;
+  string depositFee = 8;
   string createTime = 9;
   string updateTime = 10;
   string withdrawId = 11;
@@ -199,7 +199,7 @@ message SubMemberDepositRecord {
   string amount = 3;
   string txID = 4;
   string status = 5;
-  string address = 6;
+  string toAddress = 6;
   string tag = 7;
   string depositFee = 8;
   string createTime = 9;
